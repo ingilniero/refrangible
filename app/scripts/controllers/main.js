@@ -16,11 +16,13 @@ angular.module('angularApp')
     vm.messagesRef = vm.rootRef.child('messages');
     vm.currentUser = null;
     vm.currentText = null;
+    vm.messages = [];
 
-    vm.messagesRef.on('value', function(snapshot){
+    vm.messagesRef.on('child_added', function(snapshot){
       $timeout(function(){
         var snapshowVal = snapshot.val();
-        vm.messages = snapshowVal;
+        console.log(snapshowVal);
+        vm.messages.push(snapshowVal);
       });
     });
 
