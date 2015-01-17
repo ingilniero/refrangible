@@ -8,8 +8,10 @@
     var messagesRef = rootRef.child('messages');
 
     return {
-      childAdded: function childAdded(callback) {
-        messagesRef.on('child_added', function(snapshot){
+      childAdded: function childAdded(callback, limit) {
+        var limitMessages = limit | 5;
+
+        messagesRef.limit(limitMessages).on('child_added', function(snapshot){
           var val = snapshot.val();
 
           callback.call(this,{

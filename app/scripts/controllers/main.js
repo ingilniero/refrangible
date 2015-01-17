@@ -35,7 +35,7 @@ angular.module('angularApp')
         $timeout(function(){
           vm.messages.push(childAdded);
         });
-      });
+      }, 10);
 
       MessagesService.childChanged(function(childChanged){
         $timeout(function(){
