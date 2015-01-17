@@ -20,11 +20,38 @@ angular.module('angularApp')
 
     vm.messagesRef.on('child_added', function(snapshot){
       $timeout(function(){
-        var snapshowVal = snapshot.val();
-        console.log(snapshowVal);
-        vm.messages.push(snapshowVal);
+        var snapshotVal = snapshot.val();
+        vm.messages.push({
+         user: snapshotVal.user,
+         text: snapshotVal.text,
+         key: snapshot.key()
+        });
       });
     });
+
+    vm.messagesRef.on('child_changed', function(snapshot){
+      $timeout(function(){
+        var snapshotVal = snapshot.val();
+        var message = findMessageByKey(snapshot.key());
+
+        message.text = snapshotVal.text;
+        message.user = snapshotVal.user;
+      });
+    });
+
+    function findMessageByKey(key) {
+      var messageFound = null;
+      angular.forEach(vm.messages, function(message){
+        if(message.key === key) {
+          messageFound = message;
+        }
+
+        if(!!messageFound)
+          return;
+      });
+
+      return messageFound;
+    }
 
     vm.sendMessage = function() {
       var newMessage = {
