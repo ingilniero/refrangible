@@ -9,9 +9,9 @@
 
     return {
       childAdded: function childAdded(callback, limit) {
-        var limitMessages = limit | 5;
+        var limitMessages = limit || 5;
 
-        messagesRef.limit(limitMessages).on('child_added', function(snapshot){
+        messagesRef.startAt().limit(limitMessages).on('child_added', function(snapshot){
           var val = snapshot.val();
 
           callback.call(this,{
