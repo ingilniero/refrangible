@@ -29,4 +29,5 @@ angular
       .otherwise({
         redirectTo: '/'
       });
-  });
+  })
+  .constant('FBURL', 'https://refrangible.firebaseio.com/');

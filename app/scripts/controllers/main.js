@@ -9,12 +9,8 @@
  * Controller of the refrangible
  */
 angular.module('angularApp')
-  .controller('MainCtrl', function ($scope, $timeout) {
+  .controller('MainCtrl', function ($scope, $timeout, MessagesService, TitleService) {
     var vm = this;
-
-    vm.rootRef = new Firebase('https://refrangible.firebaseio.com/');
-    vm.messagesRef = vm.rootRef.child('messages');
-    vm.titleRef = vm.rootRef.child('title');
 
     vm.title = null;
     vm.currentUser = null;
@@ -26,39 +22,32 @@ angular.module('angularApp')
 
     setListeners();
 
-    vm.titleRef.once('value', function(snapshot) {
+    TitleService.valueOnce(function(titleValue){
       $timeout(function(){
-        vm.title = snapshot.val();
+        vm.title = titleValue;
       });
     });
 
     function setListeners() {
       vm.messages = [];
 
-      vm.messagesRef.on('child_added', function(snapshot){
+      MessagesService.childAdded(function(childAdded){
         $timeout(function(){
-          var snapshotVal = snapshot.val();
-          vm.messages.push({
-           user: snapshotVal.user,
-           text: snapshotVal.text,
-           key: snapshot.key()
-          });
+          vm.messages.push(childAdded);
         });
       });
 
-      vm.messagesRef.on('child_changed', function(snapshot){
+      MessagesService.childChanged(function(childChanged){
         $timeout(function(){
-          var snapshotVal = snapshot.val();
-          var message = findMessageByKey(snapshot.key());
-
-          message.text = snapshotVal.text;
-          message.user = snapshotVal.user;
+          var message = findMessageByKey(childChanged.key);
+          message.text = childChanged.text;
+          message.user = childChanged.user;
         });
       });
 
-      vm.messagesRef.on('child_removed', function(snapshot){
+      MessagesService.childRemoved(function(childRemovedKey){
         $timeout(function(){
-          deleteMessageByKey(snapshot.key());
+          deleteMessageByKey(childRemovedKey);
         });
       });
     }
@@ -94,12 +83,12 @@ angular.module('angularApp')
         text: vm.currentText
       };
 
-      vm.messagesRef.push(newMessage);
+      MessagesService.addChild(newMessage);
     };
 
     function turnOffFeed() {
       vm.isFeedTurnOff = true;
-      vm.messagesRef.off();
+      MessagesService.off();
     }
 
     function turnOnFeed() {
