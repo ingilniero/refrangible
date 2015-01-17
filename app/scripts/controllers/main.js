@@ -39,6 +39,22 @@ angular.module('angularApp')
       });
     });
 
+    vm.messagesRef.on('child_removed', function(snapshot){
+      $timeout(function(){
+        deleteMessageByKey(snapshot.key());
+      });
+    });
+
+    function deleteMessageByKey(key) {
+      for(var i = 0; i < vm.messages.length; i++) {
+        var currentMessage = vm.messages[i];
+        if(currentMessage.key === key) {
+          vm.messages.splice(i, 1);
+          break;
+        }
+      }
+    }
+
     function findMessageByKey(key) {
       var messageFound = null;
 
