@@ -14,6 +14,9 @@ angular.module('angularApp')
 
     vm.rootRef = new Firebase('https://refrangible.firebaseio.com/');
     vm.messagesRef = vm.rootRef.child('messages');
+    vm.titleRef = vm.rootRef.child('title');
+
+    vm.title = null;
     vm.currentUser = null;
     vm.currentText = null;
     vm.sendMessage = sendMessage;
@@ -22,6 +25,12 @@ angular.module('angularApp')
     vm.turnOnFeed = turnOnFeed;
 
     setListeners();
+
+    vm.titleRef.once('value', function(snapshot) {
+      $timeout(function(){
+        vm.title = snapshot.val();
+      });
+    });
 
     function setListeners() {
       vm.messages = [];
