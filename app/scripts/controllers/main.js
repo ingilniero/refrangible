@@ -41,14 +41,14 @@ angular.module('angularApp')
 
     function findMessageByKey(key) {
       var messageFound = null;
-      angular.forEach(vm.messages, function(message){
-        if(message.key === key) {
-          messageFound = message;
-        }
 
-        if(!!messageFound)
-          return;
-      });
+      for(var i = 0; i < vm.messages.length; i++) {
+        var currentMessage = vm.messages[i];
+        if(currentMessage.key === key) {
+          messageFound = currentMessage;
+          break;
+        }
+      }
 
       return messageFound;
     }
