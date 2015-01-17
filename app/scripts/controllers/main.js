@@ -16,34 +16,44 @@ angular.module('angularApp')
     vm.messagesRef = vm.rootRef.child('messages');
     vm.currentUser = null;
     vm.currentText = null;
-    vm.messages = [];
+    vm.sendMessage = sendMessage;
+    vm.isFeedTurnOff = false;
+    vm.turnOffFeed = turnOffFeed;
+    vm.turnOnFeed = turnOnFeed;
 
-    vm.messagesRef.on('child_added', function(snapshot){
-      $timeout(function(){
-        var snapshotVal = snapshot.val();
-        vm.messages.push({
-         user: snapshotVal.user,
-         text: snapshotVal.text,
-         key: snapshot.key()
+    setListeners();
+
+    function setListeners() {
+      vm.messages = [];
+
+      vm.messagesRef.on('child_added', function(snapshot){
+        $timeout(function(){
+          var snapshotVal = snapshot.val();
+          vm.messages.push({
+           user: snapshotVal.user,
+           text: snapshotVal.text,
+           key: snapshot.key()
+          });
         });
       });
-    });
 
-    vm.messagesRef.on('child_changed', function(snapshot){
-      $timeout(function(){
-        var snapshotVal = snapshot.val();
-        var message = findMessageByKey(snapshot.key());
+      vm.messagesRef.on('child_changed', function(snapshot){
+        $timeout(function(){
+          var snapshotVal = snapshot.val();
+          var message = findMessageByKey(snapshot.key());
 
-        message.text = snapshotVal.text;
-        message.user = snapshotVal.user;
+          message.text = snapshotVal.text;
+          message.user = snapshotVal.user;
+        });
       });
-    });
 
-    vm.messagesRef.on('child_removed', function(snapshot){
-      $timeout(function(){
-        deleteMessageByKey(snapshot.key());
+      vm.messagesRef.on('child_removed', function(snapshot){
+        $timeout(function(){
+          deleteMessageByKey(snapshot.key());
+        });
       });
-    });
+    }
+
 
     function deleteMessageByKey(key) {
       for(var i = 0; i < vm.messages.length; i++) {
@@ -69,7 +79,7 @@ angular.module('angularApp')
       return messageFound;
     }
 
-    vm.sendMessage = function() {
+    function sendMessage() {
       var newMessage = {
         user: vm.currentUser,
         text: vm.currentText
@@ -78,4 +88,13 @@ angular.module('angularApp')
       vm.messagesRef.push(newMessage);
     };
 
+    function turnOffFeed() {
+      vm.isFeedTurnOff = true;
+      vm.messagesRef.off();
+    }
+
+    function turnOnFeed() {
+      vm.isFeedTurnOff = false;
+      setListeners();
+    }
   });
