@@ -1,26 +1,7 @@
-<h2>{{vm.title}}</h2>
-
-<div class="jumbotron">
-  <div ng-repeat='message in vm.messages'>
-    {{ message.user}} - {{ message.text }}
-  </div>
-</div>
-
-<button type='button' ng-if='!vm.isFeedTurnOff' class='btn btn-danger'
-        ng-click='vm.turnOffFeed()'>Turn Off Feed</button>
-
-<button type='button' ng-if='vm.isFeedTurnOff' class='btn btn-success'
-        ng-click='vm.turnOnFeed()'>Turn On Feed</button>
-
-<button type='button' ng-click='vm.previous()' class='btn btn-success'>Previous</button>
-<button type='button' ng-click='vm.next()' class='btn btn-success'>Next</button>
-
-<div class="row marketing">
-  <input type='text' class='form-control' placeholder='username' ng-model='vm.currentUser' />
-  <div class='input-group'>
-    <input type="text" class='form-control' placeholder='message' ng-model='vm.currentText'/>
-    <span class='input-group-btn'>
-      <button class='btn btn-default' type='button' ng-click='vm.sendMessage()'>Send</button>
-    </span>
-  </div>
+<div class='jumbotron'>
+  <h2>Chat app</h2>
+  <p>
+    <a class='btn btn-primary' data-ng-href='#/login'>Login</a>
+    <a class='btn btn-success' data-ng-href='#/register'>Register</a>
+  </p>
 </div>

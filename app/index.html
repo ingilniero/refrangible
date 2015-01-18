@@ -24,17 +24,18 @@
     <div class="container">
       <div class="header">
         <ul class="nav nav-pills pull-right">
-          <li class="active"><a ng-href="#">Home</a></li>
-          <li><a ng-href="#/about">About</a></li>
-          <li><a ng-href="#">Contact</a></li>
+          <li><a ng-href="#/">Home</a></li>
+          <li><a ng-href="#/login">Login</a></li>
+          <li><a ng-href="#/chat">Chat</a></li>
+          <li><a ng-href="#/logout">Logout</a></li>
+          <li><a ng-href="#/register">Register</a></li>
         </ul>
-        <h3 class="text-muted">angular</h3>
+        <h3 class="text-muted">Refrangible</h3>
       </div>
 
       <div ng-view=""></div>
 
       <div class="footer">
-        <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
       </div>
     </div>
 
@@ -63,9 +64,13 @@
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/services/messages_service.js"></script>
+        <script src="scripts/services/auth_service.js"></script>
         <script src="scripts/services/title_service.js"></script>
         <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/about.js"></script>
+        <script src="scripts/controllers/chat.js"></script>
+        <script src="scripts/controllers/login.js"></script>
+        <script src="scripts/controllers/register.js"></script>
+        <script src="scripts/controllers/logout.js"></script>
         <!-- endbuild -->
 </body>
 </html>
