@@ -8,6 +8,16 @@
     var messagesRef = rootRef.child('messages');
     var defaultPageSize = 5;
 
+    function deferredItems(deferred, messages, snapshot) {
+      snapshot.forEach(function(snapItem){
+        var itemVal = snapItem.val();
+        itemVal.key = snapItem.key();
+        messages.push(itemVal);
+      });
+
+      deferred.resolve(messages);
+    }
+
     return {
       childAdded: function childAdded(callback, limit) {
         var limitMessages = limit || defaultPageSize;
@@ -50,13 +60,7 @@
         var limitMessages = pageSize || defaultPageSize;
 
         messagesRef.startAt(null, startingKey).limitToFirst(pageSize).once('value', function(snapshot){
-          snapshot.forEach(function(snapItem){
-            var itemVal = snapItem.val();
-            itemVal.key = snapItem.key();
-            messages.push(itemVal);
-          });
-
-          deferred.resolve(messages);
+          deferredItems(deferred, messages, snapshot);
         });
 
         return deferred.promise;
@@ -64,15 +68,10 @@
       previousPage: function previousPage(startingKey, pageSize){
         var deferred = $q.defer();
         var messages = [];
+        var limitMessages = pageSize || defaultPageSize;
 
         messagesRef.endAt(null, startingKey).limitToLast(pageSize).once('value', function(snapshot) {
-          snapshot.forEach(function(snapItem) {
-            var itemVal = snapItem.val();
-            itemVal.key = snapItem.key();
-            messages.push(itemVal);
-          });
-
-          deferred.resolve(messages);
+          deferredItems(deferred, messages, snapshot);
         });
 
         return deferred.promise;
