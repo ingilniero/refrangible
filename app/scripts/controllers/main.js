@@ -1,4 +1,3 @@
-/*global Firebase*/
 'use strict';
 
 /**
@@ -86,7 +85,7 @@ angular.module('angularApp')
       };
 
       MessagesService.addChild(newMessage);
-    };
+    }
 
     function turnOffFeed() {
       vm.isFeedTurnOff = true;

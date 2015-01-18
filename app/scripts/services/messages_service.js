@@ -52,14 +52,14 @@
         messagesRef.push(child);
       },
       off: function turnOffFeed() {
-        messagesRef.off()
+        messagesRef.off();
       },
       nextPage: function nextPage(startingKey, pageSize) {
         var deferred = $q.defer();
         var messages = [];
         var limitMessages = pageSize || defaultPageSize;
 
-        messagesRef.startAt(null, startingKey).limitToFirst(pageSize).once('value', function(snapshot){
+        messagesRef.startAt(null, startingKey).limitToFirst(limitMessages).once('value', function(snapshot){
           deferredItems(deferred, messages, snapshot);
         });
 
@@ -70,13 +70,13 @@
         var messages = [];
         var limitMessages = pageSize || defaultPageSize;
 
-        messagesRef.endAt(null, startingKey).limitToLast(pageSize).once('value', function(snapshot) {
+        messagesRef.endAt(null, startingKey).limitToLast(limitMessages).once('value', function(snapshot) {
           deferredItems(deferred, messages, snapshot);
         });
 
         return deferred.promise;
       }
-    }
+    };
   });
 
 })(window.angular);

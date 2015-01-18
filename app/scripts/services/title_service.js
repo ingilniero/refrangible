@@ -13,7 +13,7 @@
           callback.call(this, snapshot.val());
         });
       }
-    }
+    };
   });
 
 })(window.angular);
