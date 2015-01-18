@@ -12,6 +12,9 @@
 <button type='button' ng-if='vm.isFeedTurnOff' class='btn btn-success'
         ng-click='vm.turnOnFeed()'>Turn On Feed</button>
 
+<button type='button' ng-click='vm.next()' class='btn btn-success'>Next</button>
+<button type='button' ng-click='vm.previous()' class='btn btn-success'>Previous</button>
+
 <div class="row marketing">
   <input type='text' class='form-control' placeholder='username' ng-model='vm.currentUser' />
   <div class='input-group'>

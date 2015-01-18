@@ -19,6 +19,8 @@ angular.module('angularApp')
     vm.isFeedTurnOff = false;
     vm.turnOffFeed = turnOffFeed;
     vm.turnOnFeed = turnOnFeed;
+    vm.next = next;
+    vm.previous = previous;
 
     setListeners();
 
@@ -94,5 +96,19 @@ angular.module('angularApp')
     function turnOnFeed() {
       vm.isFeedTurnOff = false;
       setListeners();
+    }
+
+    function next() {
+      var lastItem = vm.messages[vm.messages.length - 1];
+      MessagesService.nextPage(lastItem.key, 3).then(function(messages){
+        vm.messages = messages;
+      });
+    }
+
+    function previous() {
+      var firstItem = vm.messages[0];
+      MessagesService.previousPage(firstItem.key, 3).then(function(messages){
+        vm.messages = messages;
+      });
     }
   });
