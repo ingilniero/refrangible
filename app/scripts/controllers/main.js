@@ -23,36 +23,27 @@ angular.module('angularApp')
 
     setListeners();
 
-    TitleService.valueOnce(function(titleValue){
-      $timeout(function(){
+    TitleService.loaded(function(titleValue){
         vm.title = titleValue;
-      });
     });
 
     function setListeners() {
       vm.messages = [];
 
-      MessagesService.childAdded(function(childAdded){
-        $timeout(function(){
-          vm.messages.push(childAdded);
-        });
+      MessagesService.watch({
+        child_added: function(message){
+          vm.messages.push(message);
+        },
+        child_removed: function(message) {
+          deleteMessageByKey(message.key);
+        },
+        child_changed: function(changedMessage) {
+          var message = findMessageByKey(changedMessage.key);
+          message.text = changedMessage.text;
+          message.user = changedMessage.user;
+        }
       }, 3);
-
-      MessagesService.childChanged(function(childChanged){
-        $timeout(function(){
-          var message = findMessageByKey(childChanged.key);
-          message.text = childChanged.text;
-          message.user = childChanged.user;
-        });
-      });
-
-      MessagesService.childRemoved(function(childRemovedKey){
-        $timeout(function(){
-          deleteMessageByKey(childRemovedKey);
-        });
-      });
     }
-
 
     function deleteMessageByKey(key) {
       for(var i = 0; i < vm.messages.length; i++) {
@@ -100,14 +91,22 @@ angular.module('angularApp')
     function next() {
       var lastItem = vm.messages[vm.messages.length - 1];
       MessagesService.nextPage(lastItem.key, 3).then(function(messages){
-        vm.messages = messages;
+        vm.messages = [];
+        messages.forEach(function(message){
+          message.key = message.$id;
+          vm.messages.push(message);
+        });
       });
     }
 
     function previous() {
       var firstItem = vm.messages[0];
       MessagesService.previousPage(firstItem.key, 3).then(function(messages){
-        vm.messages = messages;
+        vm.messages = [];
+        messages.forEach(function(message){
+          message.key = message.$id;
+          vm.messages.push(message);
+        });
       });
     }
   });

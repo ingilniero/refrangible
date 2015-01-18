@@ -3,14 +3,15 @@
 (function(angular){
   'use strict';
 
-  angular.module('angularApp').service('TitleService', function(FBURL) {
+  angular.module('angularApp').service('TitleService', function(FBURL, $firebase) {
     var rootRef =  new Firebase(FBURL);
     var titleRef = rootRef.child('title');
+    var fireTitle = $firebase(titleRef).$asObject();
 
     return {
-      valueOnce: function valueOnce(callback){
-        titleRef.once('value', function(snapshot){
-          callback.call(this, snapshot.val());
+      loaded: function loaded(callback){
+        fireTitle.$loaded().then(function(data){
+          callback.call(this, data.$value);
         });
       }
     };

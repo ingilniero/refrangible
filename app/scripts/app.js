@@ -14,7 +14,8 @@ angular
     'ngMessages',
     'ngResource',
     'ngRoute',
-    'ngSanitize'
+    'ngSanitize',
+    'firebase'
   ])
   .config(function ($routeProvider) {
     $routeProvider
