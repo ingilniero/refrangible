@@ -17,6 +17,17 @@ angular
     'ngSanitize',
     'firebase'
   ])
+  .constant('FBURL', 'https://refrangible.firebaseio.com/')
+  .config(['$routeProvider', function($routeProvider) {
+    $routeProvider.whenAuthenticated = function(path, route) {
+      route.resolve = route.resolve || {};
+      route.resolve.user = ['SecureRoutes', function(SecureRoutes) {
+        return SecureRoutes();
+      }];
+      $routeProvider.when(path, route);
+      return $routeProvider;
+    }
+  }])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
@@ -24,7 +35,7 @@ angular
         controller: 'MainCtrl',
         controllerAs: 'vm'
       })
-      .when('/chat', {
+      .whenAuthenticated('/chat', {
         templateUrl: 'views/chat.html',
         controller: 'ChatCtrl',
         controllerAs: 'vm'
@@ -39,7 +50,7 @@ angular
         controller: 'RegisterCtrl',
         controllerAs: 'vm'
       })
-      .when('/logout', {
+      .whenAuthenticated('/logout', {
         templateUrl: 'views/logout.html',
         controller: 'LogoutCtrl',
         controllerAs: 'vm'
@@ -48,4 +59,10 @@ angular
         redirectTo: '/'
       });
   })
-  .constant('FBURL', 'https://refrangible.firebaseio.com/');
+  .run(function($rootScope) {
+    $rootScope.$on('$routeChangeError', function (e, next, prev, err){
+      if (angular.isObject(err) && err.authRequired) {
+        window.location.href = '/#/login';
+      }
+    });
+  });
